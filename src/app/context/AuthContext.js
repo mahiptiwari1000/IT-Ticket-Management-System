@@ -1,10 +1,11 @@
 'use client';
 
 import { createContext, useContext, useEffect, useState } from "react";
-import { Amplify, Auth } from "aws-amplify";
-import awsconfig from "../../aws-exports";
+import { Amplify } from "aws-amplify";
+import { getCurrentUser } from 'aws-amplify/auth';
+import amplifyconfig from "../../amplifyconfiguration.json";
 
-Amplify.configure(awsconfig);
+Amplify.configure(amplifyconfig);
 
 const AuthContext = createContext();
 
@@ -14,7 +15,7 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const checkUser = async () => {
       try {
-        const loggedInUser = await Auth.currentAuthenticatedUser();
+        const loggedInUser = await getCurrentUser();
         setUser(loggedInUser);
       } catch (err) {
         setUser(null);

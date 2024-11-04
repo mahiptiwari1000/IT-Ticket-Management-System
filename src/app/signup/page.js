@@ -2,8 +2,10 @@
 
 import { FaUser, FaLock, FaEnvelope } from 'react-icons/fa';
 import { useState } from 'react';
-import { Auth } from 'aws-amplify';
+//import { Auth } from 'aws-amplify';
 import { useRouter } from 'next/navigation';
+import { signUp } from 'aws-amplify/auth';
+
 
 const SignUpPage = () => {
   const [username, setUsername] = useState('');
@@ -19,7 +21,7 @@ const SignUpPage = () => {
     setSuccess(null);
 
     try {
-      await Auth.signUp({
+      await signUp({
         username,
         password,
         attributes: { email },

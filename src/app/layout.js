@@ -1,10 +1,12 @@
 import localFont from "next/font/local";
 import "./globals.css";
 import { AuthProvider } from './context/AuthContext';
-import awsconfig from '../aws-exports'; // Adjust the path if necessary
-import { Amplify, Auth } from 'aws-amplify';
+//import awsconfig from '../aws-exports'; // Adjust the path if necessary
+import { Amplify } from 'aws-amplify';
+import amplifyconfig from '../amplifyconfiguration.json';
 
-Amplify.configure(awsconfig);
+
+Amplify.configure(amplifyconfig);
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",

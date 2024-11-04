@@ -1,23 +1,38 @@
 "use client";
 
 import { FaUser, FaLock, FaApple, FaGoogle } from 'react-icons/fa';
-import { useState } from 'react';
-import { Auth } from 'aws-amplify';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { signIn } from 'aws-amplify/auth';
 
 const LoginPage = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false); // Track auth state
+    const [isRegisterClicked, setIsRegisterClicked] = useState(false);
   const router = useRouter();
+
+  useEffect(() => {
+    // Redirect to dashboard if user is authenticated
+    if (isAuthenticated) {
+      router.push('/dashboard');
+    }
+  }, [isAuthenticated, router]); // Only trigger this effect if `isAuthenticated` changes
+
+  useEffect(() => {
+    // Redirect to dashboard if user is authenticated
+    router.push('/signup'); // Navigate to the signup page
+    }, [isRegisterClicked]); // Only trigger this effect if `isAuthenticated` changes
 
   const handleLogin = async (e) => {
     e.preventDefault();
     setError(null); // Clear any existing errors
+    setIsRegisterClicked(false);
 
     try {
-      await Auth.signIn(username, password);
-      router.push('/dashboard'); // Redirect to dashboard on successful login
+      await signIn({ username, password });
+      setIsAuthenticated(true); // Set auth state to true
     } catch (err) {
       setError('Failed to sign in. Please check your credentials.');
       console.error("Login error:", err); // Log the error for debugging
@@ -25,7 +40,7 @@ const LoginPage = () => {
   };
 
   const handleRegister = () => {
-    router.push('/signup'); // Navigate to the signup page
+    setIsRegisterClicked(true); // Navigate to the signup page
   };
 
   return (
@@ -35,7 +50,7 @@ const LoginPage = () => {
           <div className="text-5xl text-orange-500">⚡</div>
         </div>
 
-        <h2 className="text-3xl font-semibold text-center text-orange-500 mb-8">Invictus.</h2>
+        <h2 className="text-3xl font-semibold text-center text-orange-500 mb-8">Invincible .</h2>
 
         {error && <p className="text-red-500 text-center mb-4">{error}</p>}
 

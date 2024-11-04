@@ -5,7 +5,11 @@ import { useRouter } from 'next/navigation';
 import Dashboard from './dashboard/page'; // Import the dashboard
 import Login from './login/page'; // Import the login page
 import { AuthProvider } from './context/AuthContext';
-import { Amplify, Auth } from 'aws-amplify';
+import { Amplify} from 'aws-amplify';
+import { getCurrentUser, fetchAuthSession } from 'aws-amplify/auth';
+import amplifyconfig from '../amplifyconfiguration.json'; // Ensure amplifyconfiguration.json path is correct
+
+Amplify.configure(amplifyconfig);
 
 export default function Home() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -13,14 +17,24 @@ export default function Home() {
   const router = useRouter();
 
   useEffect(() => {
-    document.documentElement.classList.add('dark'); // Force dark mode on the whole app
-
     // Check if the user is authenticated
     const checkAuthStatus = async () => {
       try {
-        await Auth.currentAuthenticatedUser(); // Check if user is logged in
-        setIsAuthenticated(true);
+        // Retrieve the current user
+        const user = await getCurrentUser();
+        
+        // Fetch session details
+        const session = await fetchAuthSession();
+
+        // Check if the session is valid
+        if (user && session && session.isValid()) {
+          setIsAuthenticated(true);
+        } else {
+          setIsAuthenticated(false);
+        }
       } catch (error) {
+        // If there's an error (e.g., user is not signed in), set authentication status to false
+        console.error("Authentication check failed:", error);
         setIsAuthenticated(false);
       } finally {
         setLoading(false);
