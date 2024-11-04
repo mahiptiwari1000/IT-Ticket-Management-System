@@ -10,25 +10,19 @@ const LoginPage = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false); // Track auth state
-    const [isRegisterClicked, setIsRegisterClicked] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
     // Redirect to dashboard if user is authenticated
+    console.log(isAuthenticated);
     if (isAuthenticated) {
       router.push('/dashboard');
     }
   }, [isAuthenticated, router]); // Only trigger this effect if `isAuthenticated` changes
 
-  useEffect(() => {
-    // Redirect to dashboard if user is authenticated
-    router.push('/signup'); // Navigate to the signup page
-    }, [isRegisterClicked]); // Only trigger this effect if `isAuthenticated` changes
-
   const handleLogin = async (e) => {
     e.preventDefault();
     setError(null); // Clear any existing errors
-    setIsRegisterClicked(false);
 
     try {
       await signIn({ username, password });
@@ -40,7 +34,7 @@ const LoginPage = () => {
   };
 
   const handleRegister = () => {
-    setIsRegisterClicked(true); // Navigate to the signup page
+    router.push('/signup'); // Navigate to the signup page
   };
 
   return (
