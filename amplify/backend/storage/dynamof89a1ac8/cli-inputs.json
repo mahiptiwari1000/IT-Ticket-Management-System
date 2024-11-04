@@ -1,0 +1,10 @@
+{
+  "resourceName": "dynamof89a1ac8",
+  "tableName": "dynamof89a1ac8",
+  "partitionKey": {
+    "fieldName": "ticket_ID",
+    "fieldType": "number"
+  },
+  "gsi": [],
+  "triggerFunctions": []
+}
